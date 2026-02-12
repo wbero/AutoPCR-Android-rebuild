@@ -18,17 +18,14 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,json,html,js,css,svg,txt,db
 # 版本号
 version = 1.0.0
 
-# 依赖项 - 简化列表，避免复杂依赖问题
-requirements = python3,kivy,aiohttp,quart,sqlalchemy,pillow,pycryptodome,requests,msgpack
+# 依赖项 - 使用hostpython3避免交叉编译问题
+requirements = hostpython3,kivy
 
 # Android API版本
 android.api = 33
 
 # 最低API版本
 android.minapi = 21
-
-# 目标API版本
-android.sdk = 33
 
 # NDK版本
 android.ndk = 25b
