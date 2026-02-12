@@ -17,7 +17,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
+        python-version: '3.9'
     
     - name: Install system dependencies
       run: |
@@ -44,7 +44,6 @@ jobs:
           libxml2-dev \
           libxslt1-dev \
           ccache
-        pip3 install buildozer cython
     
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -67,6 +66,7 @@ jobs:
     
     - name: Build APK with verbose output
       run: |
+        pip3 install buildozer cython
         export CCACHE_COMPRESS=1
         export CCACHE_MAXSIZE=5G
         buildozer android debug -v 2>&1 | tee build.log
