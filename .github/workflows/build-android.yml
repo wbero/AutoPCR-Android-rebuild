@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     
     steps:
     - uses: actions/checkout@v4
@@ -35,11 +35,14 @@ jobs:
           zlib1g-dev \
           libncurses5-dev \
           libncursesw5-dev \
-          libtinfo5 \
+          libtinfo6 \
           cmake \
           libffi-dev \
           libssl-dev \
-          automake
+          automake \
+          liblzma-dev \
+          libxml2-dev \
+          libxslt1-dev
         pip3 install buildozer cython
     
     - name: Build APK
