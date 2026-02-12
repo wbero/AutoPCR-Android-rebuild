@@ -19,7 +19,7 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,json,html,js,css,svg,txt,db
 version = 1.0.0
 
 # 依赖项 - 使用p4a develop分支和直接从GitHub拉取pyjnius
-requirements = python3,kivy,https://github.com/kivy/pyjnius/archive/refs/tags/1.7.1.zip
+requirements = python3,kivy,https://github.com/kivy/pyjnius/archive/refs/tags/1.7.0.zip
 
 # p4a配置 - 使用develop分支获取最新的recipe
 p4a.branch = develop
