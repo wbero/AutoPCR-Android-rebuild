@@ -18,8 +18,8 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,json,html,js,css,svg,txt,db
 # 版本号
 version = 1.0.0
 
-# 依赖项 - 使用hostpython3避免交叉编译问题
-requirements = hostpython3,kivy
+# 依赖项 - 显式指定pyjnius版本避免Python 3兼容性问题
+requirements = python3,kivy,pyjnius==1.6.1
 
 # Android API版本
 android.api = 33

@@ -17,10 +17,13 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.9'
+        python-version: '3.10'
     
-    - name: Install system dependencies
+    - name: Clear cache and install dependencies
       run: |
+        # 清理旧缓存，避免pyjnius旧版本干扰
+        rm -rf ~/.local/share/python-for-android
+        rm -rf .buildozer
         sudo apt-get update
         sudo apt-get install -y \
           python3-pip \
@@ -48,18 +51,8 @@ jobs:
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-        key: buildozer
+        key: buildozer-v2
         max-size: 5G
-    
-    - name: Cache Buildozer dependencies
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.buildozer
-          .buildozer
-        key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
-        restore-keys: |
-          ${{ runner.os }}-buildozer-
     
     - name: List files
       run: ls -la
