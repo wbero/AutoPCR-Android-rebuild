@@ -10,6 +10,14 @@ import sys
 import time
 import threading
 import webbrowser
+import logging
+
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='[%(levelname)s] %(message)s'
+)
+logger = logging.getLogger('AutoPCR')
 
 # Set Kivy environment
 os.environ['KIVY_NO_CONSOLELOG'] = '1'
@@ -28,8 +36,10 @@ try:
     from android.permissions import request_permissions, Permission
     from android.storage import app_storage_path
     IS_ANDROID = True
+    logger.info("Running on Android")
 except ImportError:
     IS_ANDROID = False
+    logger.info("Running on Desktop")
 
 # Ensure directories exist
 def ensure_directories():
@@ -38,6 +48,8 @@ def ensure_directories():
         root_dir = app_storage_path()
     else:
         root_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    logger.info(f"Root directory: {root_dir}")
     
     dirs = [
         os.path.join(root_dir, 'cache'),
@@ -49,48 +61,73 @@ def ensure_directories():
     ]
     
     for d in dirs:
-        os.makedirs(d, exist_ok=True)
+        try:
+            os.makedirs(d, exist_ok=True)
+            logger.info(f"Created directory: {d}")
+        except Exception as e:
+            logger.error(f"Failed to create directory {d}: {e}")
     
     return root_dir
 
 class ServerThread(threading.Thread):
     """Backend server thread"""
-    def __init__(self):
+    def __init__(self, status_callback=None):
         super().__init__(daemon=True)
         self.running = False
         self.server = None
+        self.status_callback = status_callback
+        self.error_msg = None
         
     def run(self):
         """Start Quart server"""
+        logger.info("Server thread started")
         try:
             import asyncio
+            logger.info("Imported asyncio")
+            
             from autopcr.http_server.httpserver import HttpServer
+            logger.info("Imported HttpServer")
+            
             from autopcr.db.dbstart import db_start
+            logger.info("Imported db_start")
+            
             from autopcr.module.crons import queue_crons
+            logger.info("Imported queue_crons")
             
             # Create new event loop
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
+            logger.info("Created event loop")
             
             # Initialize database
+            logger.info("Initializing database...")
             loop.run_until_complete(db_start())
+            logger.info("Database initialized")
             
             # Setup cron jobs
+            logger.info("Setting up cron jobs...")
             queue_crons()
+            logger.info("Cron jobs setup complete")
             
             # Create server (listen on localhost only)
+            logger.info("Creating HTTP server...")
             self.server = HttpServer(host='127.0.0.1', port=13200)
             self.running = True
             
-            print("[AutoPCR] Server started at http://127.0.0.1:13200")
+            logger.info("Server started at http://127.0.0.1:13200")
+            if self.status_callback:
+                Clock.schedule_once(lambda dt: self.status_callback("Server Started"), 0)
             
             # Run server
             self.server.run_forever(loop)
             
         except Exception as e:
-            print(f"[AutoPCR] Server error: {e}")
+            self.error_msg = str(e)
+            logger.error(f"Server error: {e}")
             import traceback
-            traceback.print_exc()
+            logger.error(traceback.format_exc())
+            if self.status_callback:
+                Clock.schedule_once(lambda dt: self.status_callback(f"Error: {e}"), 0)
     
     def stop(self):
         """Stop server"""
@@ -101,18 +138,26 @@ class AutoPCRApp(App):
     
     def build(self):
         """Build app UI"""
+        logger.info("Building app UI...")
+        
         # Set window title and size
         self.title = 'AutoPCR'
         Window.clearcolor = (0.1, 0.1, 0.1, 1)
         
         # Request Android permissions
         if IS_ANDROID:
-            request_permissions([
-                Permission.INTERNET,
-                Permission.ACCESS_NETWORK_STATE,
-            ])
+            logger.info("Requesting Android permissions...")
+            try:
+                request_permissions([
+                    Permission.INTERNET,
+                    Permission.ACCESS_NETWORK_STATE,
+                ])
+                logger.info("Permissions requested")
+            except Exception as e:
+                logger.error(f"Failed to request permissions: {e}")
         
         # Ensure directories exist
+        logger.info("Ensuring directories...")
         ensure_directories()
         
         # Create main layout
@@ -154,13 +199,18 @@ class AutoPCRApp(App):
         layout.add_widget(info_label)
         
         # Start server
-        self.server_thread = ServerThread()
+        logger.info("Starting server thread...")
+        self.server_thread = ServerThread(status_callback=self.update_status)
         self.server_thread.start()
         
         # Check server status periodically
-        Clock.schedule_interval(self.check_server_status, 1)
+        Clock.schedule_interval(self.check_server_status, 2)
         
         return layout
+    
+    def update_status(self, msg):
+        """Update status label"""
+        self.status_label.text = msg
     
     def check_server_status(self, dt):
         """Check server status"""
@@ -169,28 +219,43 @@ class AutoPCRApp(App):
             urllib.request.urlopen('http://127.0.0.1:13200/daily/', timeout=1)
             self.status_label.text = 'Service Running'
             self.status_label.color = (0.3, 0.8, 0.3, 1)  # Green
+            logger.info("Service is running")
             return False  # Stop timer
-        except:
+        except Exception as e:
+            if self.server_thread.error_msg:
+                self.status_label.text = f'Error: {self.server_thread.error_msg[:50]}'
+                self.status_label.color = (0.8, 0.3, 0.3, 1)  # Red
+                logger.error(f"Service error: {self.server_thread.error_msg}")
+                return False  # Stop timer
+            logger.debug(f"Service not ready yet: {e}")
             return True  # Continue checking
     
     def open_browser(self, instance):
         """Open browser"""
+        logger.info("Opening browser...")
         try:
             webbrowser.open('http://127.0.0.1:13200/daily/')
         except Exception as e:
+            logger.error(f"Failed to open browser: {e}")
             self.status_label.text = f'Failed to open browser: {e}'
     
     def on_stop(self):
         """Cleanup when app stops"""
+        logger.info("App stopping...")
         if hasattr(self, 'server_thread'):
             self.server_thread.stop()
 
 def main():
     """Main function"""
+    logger.info("AutoPCR starting...")
+    
     # Add current directory to Python path
     current_dir = os.path.dirname(os.path.abspath(__file__))
     if current_dir not in sys.path:
         sys.path.insert(0, current_dir)
+    
+    logger.info(f"Python path: {sys.path}")
+    logger.info(f"Current directory: {current_dir}")
     
     # Run Kivy app
     AutoPCRApp().run()
