@@ -19,6 +19,17 @@ jobs:
       with:
         python-version: '3.10'
     
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    
+    - name: Verify Java version
+      run: |
+        echo "JAVA_HOME=$JAVA_HOME"
+        java -version
+    
     - name: Clean all caches
       run: |
         # 彻底清理所有缓存，确保使用新版本
@@ -36,7 +47,6 @@ jobs:
           git \
           zip \
           unzip \
-          openjdk-17-jdk \
           autoconf \
           libtool \
           pkg-config \
