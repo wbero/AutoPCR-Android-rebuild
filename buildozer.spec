@@ -18,8 +18,11 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,json,html,js,css,svg,txt,db
 # 版本号
 version = 1.0.0
 
-# 依赖项 - 显式指定pyjnius版本避免Python 3兼容性问题
-requirements = python3,kivy,pyjnius==1.6.1
+# 依赖项 - 使用p4a develop分支和直接从GitHub拉取pyjnius
+requirements = python3,kivy,https://github.com/kivy/pyjnius/archive/refs/tags/1.6.1.zip
+
+# p4a配置 - 使用develop分支获取最新的recipe
+p4a.branch = develop
 
 # Android API版本
 android.api = 33

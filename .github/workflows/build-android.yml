@@ -19,11 +19,16 @@ jobs:
       with:
         python-version: '3.10'
     
-    - name: Clear cache and install dependencies
+    - name: Clean all caches
       run: |
-        # 清理旧缓存，避免pyjnius旧版本干扰
+        # 彻底清理所有缓存，确保使用新版本
         rm -rf ~/.local/share/python-for-android
         rm -rf .buildozer
+        rm -rf ~/.buildozer
+        pip uninstall -y pyjnius 2>/dev/null || true
+    
+    - name: Install system dependencies
+      run: |
         sudo apt-get update
         sudo apt-get install -y \
           python3-pip \
@@ -51,7 +56,7 @@ jobs:
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-        key: buildozer-v2
+        key: buildozer-v3
         max-size: 5G
     
     - name: List files
