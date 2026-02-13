@@ -37,13 +37,6 @@ jobs:
         sudo rm -f /etc/apt/sources.list.d/azure-cli.list
         sudo apt-get update || true
     
-    - name: Clean all caches
-      run: |
-        # 彻底清理所有缓存，确保使用新版本
-        rm -rf ~/.buildozer
-        rm -rf ~/.local/share/python-for-android
-        pip uninstall -y pyjnius 2>/dev/null || true
-    
     - name: Install system dependencies
       run: |
         sudo apt-get update
@@ -72,57 +65,49 @@ jobs:
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-        key: buildozer-v4-py310
+        key: buildozer-v5-py310
         max-size: 5G
     
     - name: List files
       run: ls -la
     
-    - name: Setup Android SDK
+    - name: Clean and setup Android SDK
       run: |
-        # 创建Android SDK目录
-        mkdir -p ~/.buildozer/android/platform
-        cd ~/.buildozer/android/platform
+        # 清理旧的SDK
+        rm -rf ~/.buildozer/android/platform/android-sdk
         
-        # 下载并安装Android SDK命令行工具
-        if [ ! -d "android-sdk" ]; then
-          mkdir -p android-sdk/cmdline-tools
-          cd android-sdk/cmdline-tools
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-          unzip -q commandlinetools-linux-9477386_latest.zip
-          mv cmdline-tools latest
-          cd ../..
-        fi
+        # 创建目录结构
+        mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools
+        cd ~/.buildozer/android/platform/android-sdk/cmdline-tools
+        
+        # 下载命令行工具
+        wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+        unzip -q commandlinetools-linux-9477386_latest.zip
+        
+        # 重命名为latest（这是关键！）
+        mv cmdline-tools latest
         
         # 设置环境变量
         export ANDROID_SDK_ROOT=$HOME/.buildozer/android/platform/android-sdk
-        export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
+        export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools
         
-        # 安装必要的SDK组件
+        # 接受许可并安装必要组件
         yes | sdkmanager --licenses || true
         sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0" || true
         
-        echo "Android SDK setup complete"
-    
-    - name: Setup Android NDK
-      run: |
-        # 创建目录
-        mkdir -p ~/.buildozer/android/platform
-        cd ~/.buildozer/android/platform
+        # 创建符号链接兼容旧版结构（让buildozer能找到）
+        cd $ANDROID_SDK_ROOT
+        ln -sf cmdline-tools/latest/bin bin 2>/dev/null || true
         
-        # 下载NDK
-        if [ ! -d "android-ndk-r25b" ]; then
-          wget -q https://dl.google.com/android/repository/android-ndk-r25b-linux.zip
-          unzip -q android-ndk-r25b-linux.zip
-        fi
-        
-        echo "Android NDK setup complete"
+        echo "SDK setup complete"
+        ls -la cmdline-tools/latest/bin/
     
     - name: Build APK
       run: |
         pip3 install buildozer cython
         export CCACHE_COMPRESS=1
         export CCACHE_MAXSIZE=5G
+        export ANDROID_SDK_ROOT=$HOME/.buildozer/android/platform/android-sdk
         buildozer android debug -v 2>&1 | tee build.log
       timeout-minutes: 180
       continue-on-error: true
