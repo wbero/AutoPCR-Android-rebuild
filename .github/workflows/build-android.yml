@@ -79,18 +79,42 @@ jobs:
     - name: List files
       run: ls -la
     
-    - name: Build APK with retry
+    - name: Pre-download dependencies
+      run: |
+        # 创建下载目录
+        mkdir -p ~/.buildozer/android/platform
+        cd ~/.buildozer/android/platform
+        
+        # 下载python-for-android
+        if [ ! -d "python-for-android" ]; then
+          git clone https://github.com/kivy/python-for-android.git --depth 1 || true
+        fi
+        
+        # 下载Android SDK
+        mkdir -p android-sdk
+        cd android-sdk
+        if [ ! -f "commandlinetools-linux-6514223_latest.zip" ]; then
+          wget -q --timeout=60 --tries=3 https://dl.google.com/android/repository/commandlinetools-linux-6514223_latest.zip || true
+        fi
+        cd ..
+        
+        # 下载Android NDK
+        mkdir -p android-ndk-r25b
+        cd android-ndk-r25b
+        if [ ! -f "android-ndk-r25b-linux.zip" ]; then
+          wget -q --timeout=60 --tries=3 https://dl.google.com/android/repository/android-ndk-r25b-linux.zip || true
+        fi
+        cd ..
+        
+        echo "Pre-download complete"
+      continue-on-error: true
+    
+    - name: Build APK
       run: |
         pip3 install buildozer cython
         export CCACHE_COMPRESS=1
         export CCACHE_MAXSIZE=5G
-        # 添加重试机制
-        for i in 1 2 3; do
-          echo "Attempt $i..."
-          buildozer android debug -v 2>&1 | tee build.log && break
-          echo "Build failed, waiting 30 seconds before retry..."
-          sleep 30
-        done
+        buildozer android debug -v 2>&1 | tee build.log
       timeout-minutes: 180
       continue-on-error: true
     
