@@ -65,7 +65,7 @@ jobs:
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-        key: buildozer-v5-py310
+        key: buildozer-v6-py310
         max-size: 5G
     
     - name: List files
@@ -80,11 +80,11 @@ jobs:
         mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools
         cd ~/.buildozer/android/platform/android-sdk/cmdline-tools
         
-        # 下载命令行工具
-        wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-        unzip -q commandlinetools-linux-9477386_latest.zip
+        # 下载命令行工具（使用旧版本6514223，与buildozer兼容）
+        wget -q https://dl.google.com/android/repository/commandlinetools-linux-6514223_latest.zip
+        unzip -q commandlinetools-linux-6514223_latest.zip
         
-        # 重命名为latest（这是关键！）
+        # 重命名为latest
         mv cmdline-tools latest
         
         # 设置环境变量
