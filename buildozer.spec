@@ -18,17 +18,17 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,json,html,js,css,svg,txt,db
 # 版本号
 version = 1.0.0
 
-# 依赖项 - 使用最新版pyjnius支持Python 3.11
-requirements = python3==3.11.9,kivy,https://github.com/kivy/pyjnius/archive/refs/tags/1.6.1.zip,aiohttp,quart,sqlalchemy,pillow,pycryptodome,requests,msgpack,werkzeug,jinja2,click,itsdangerous,markupsafe,async_timeout,attrs,frozenlist,multidict,yarl,charset_normalizer,idna,urllib3,certifi,typing_extensions,greenlet==3.0.3
+# 依赖项 - 使用python3并指定版本3.10
+requirements = python3==3.10.13,kivy,pyjnius,aiohttp,quart,sqlalchemy,pillow,pycryptodome,requests,msgpack,werkzeug,jinja2,click,itsdangerous,markupsafe,async_timeout,attrs,frozenlist,multidict,yarl,charset_normalizer,idna,urllib3,certifi,typing_extensions,greenlet
 
 # p4a配置 - 使用稳定版本
 p4a.branch = master
 
 # 指定Python版本 - 关键配置
-python.version = 3.11
+python.version = 3.10
 python.major = 3
-python.minor = 11
-python.patch = 9
+python.minor = 10
+python.patch = 13
 
 # Android API版本
 android.api = 33
