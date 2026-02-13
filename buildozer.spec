@@ -18,17 +18,17 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,json,html,js,css,svg,txt,db
 # 版本号
 version = 1.0.0
 
-# 依赖项 - 使用hostpython3并指定版本
-requirements = hostpython3==3.9.19,kivy,pyjnius,aiohttp,quart,sqlalchemy,pillow,pycryptodome,requests,msgpack,werkzeug,jinja2,click,itsdangerous,markupsafe,async_timeout,attrs,frozenlist,multidict,yarl,charset_normalizer,idna,urllib3,certifi,typing_extensions,greenlet
+# 依赖项 - 使用python3并指定版本3.11
+requirements = python3==3.11.9,kivy,pyjnius,aiohttp,quart,sqlalchemy,pillow,pycryptodome,requests,msgpack,werkzeug,jinja2,click,itsdangerous,markupsafe,async_timeout,attrs,frozenlist,multidict,yarl,charset_normalizer,idna,urllib3,certifi,typing_extensions,greenlet
 
-# p4a配置 - 使用稳定版本而不是develop
+# p4a配置 - 使用稳定版本
 p4a.branch = master
 
 # 指定Python版本 - 关键配置
-python.version = 3.9
+python.version = 3.11
 python.major = 3
-python.minor = 9
-python.patch = 19
+python.minor = 11
+python.patch = 9
 
 # Android API版本
 android.api = 33
