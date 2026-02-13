@@ -35,6 +35,9 @@ android.sdk_path = ~/.buildozer/android/platform/android-sdk
 android.ndk_path = ~/.buildozer/android/platform/android-ndk-r25b
 android.ant_path = ~/.buildozer/android/platform/apache-ant-1.9.4
 
+# 指定sdkmanager路径（新版本的cmdline-tools）
+android.sdkmanager_path = ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager
+
 # Android API版本
 android.api = 33
 
