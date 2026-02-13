@@ -19,10 +19,13 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,json,html,js,css,svg,txt,db
 version = 1.0.0
 
 # 依赖项 - 包含所有后端需要的包
-requirements = python3,kivy,pyjnius,aiohttp,quart,sqlalchemy,pillow,pycryptodome,requests,msgpack,werkzeug,jinja2,click,itsdangerous,markupsafe,async_timeout,attrs,frozenlist,multidict,yarl,charset_normalizer,idna,urllib3,certifi,typing_extensions,greenlet
+requirements = python3==3.9.19,kivy,pyjnius,aiohttp,quart,sqlalchemy,pillow,pycryptodome,requests,msgpack,werkzeug,jinja2,click,itsdangerous,markupsafe,async_timeout,attrs,frozenlist,multidict,yarl,charset_normalizer,idna,urllib3,certifi,typing_extensions,greenlet
 
 # p4a配置 - 使用develop分支获取最新的recipe
 p4a.branch = develop
+
+# 指定Python版本
+python.version = 3.9
 
 # Android API版本
 android.api = 33
