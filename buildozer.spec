@@ -18,8 +18,8 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,json,html,js,css,svg,txt,db
 # 版本号
 version = 1.0.0
 
-# 依赖项 - 使用python3并指定版本3.10，greenlet使用兼容版本
-requirements = python3==3.10.13,kivy,pyjnius,aiohttp,quart,sqlalchemy,pillow,pycryptodome,requests,msgpack,werkzeug,jinja2,click,itsdangerous,markupsafe,async_timeout,attrs,frozenlist,multidict,yarl,charset_normalizer,idna,urllib3,certifi,typing_extensions,greenlet==2.0.2
+# 依赖项 - 使用python3并指定版本3.10，pyjnius从GitHub获取最新版
+requirements = python3==3.10.13,kivy,https://github.com/kivy/pyjnius/archive/refs/tags/1.6.1.zip,aiohttp,quart,sqlalchemy,pillow,pycryptodome,requests,msgpack,werkzeug,jinja2,click,itsdangerous,markupsafe,async_timeout,attrs,frozenlist,multidict,yarl,charset_normalizer,idna,urllib3,certifi,typing_extensions,greenlet==2.0.2
 
 # p4a配置 - 使用稳定版本
 p4a.branch = master
