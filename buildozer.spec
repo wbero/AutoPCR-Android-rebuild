@@ -30,6 +30,11 @@ python.major = 3
 python.minor = 10
 python.patch = 13
 
+# Android SDK配置
+android.sdk_path = ~/.buildozer/android/platform/android-sdk
+android.ndk_path = ~/.buildozer/android/platform/android-ndk-r25b
+android.ant_path = ~/.buildozer/android/platform/apache-ant-1.9.4
+
 # Android API版本
 android.api = 33
 
