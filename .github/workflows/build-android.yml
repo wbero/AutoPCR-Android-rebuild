@@ -30,6 +30,13 @@ jobs:
         echo "JAVA_HOME=$JAVA_HOME"
         java -version
     
+    - name: Fix apt repositories
+      run: |
+        # Remove problematic Microsoft repositories
+        sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
+        sudo rm -f /etc/apt/sources.list.d/azure-cli.list
+        sudo apt-get update || true
+    
     - name: Clean all caches
       run: |
         # 彻底清理所有缓存，确保使用新版本
