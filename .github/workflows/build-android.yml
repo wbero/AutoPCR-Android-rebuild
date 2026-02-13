@@ -77,15 +77,16 @@ jobs:
         rm -rf ~/.buildozer/android/platform/android-sdk
         
         # 创建目录结构
-        mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools
-        cd ~/.buildozer/android/platform/android-sdk/cmdline-tools
+        mkdir -p ~/.buildozer/android/platform/android-sdk
+        cd ~/.buildozer/android/platform/android-sdk
         
         # 下载命令行工具（使用旧版本6514223，与buildozer兼容）
         wget -q https://dl.google.com/android/repository/commandlinetools-linux-6514223_latest.zip
         unzip -q commandlinetools-linux-6514223_latest.zip
         
-        # 重命名为latest
-        mv cmdline-tools latest
+        # 创建正确的目录结构 cmdline-tools/latest
+        mkdir -p cmdline-tools
+        mv tools cmdline-tools/latest
         
         # 设置环境变量
         export ANDROID_SDK_ROOT=$HOME/.buildozer/android/platform/android-sdk
@@ -98,8 +99,7 @@ jobs:
         # 创建符号链接兼容旧版结构（让buildozer能找到）
         # buildozer查找的是 tools/bin/sdkmanager
         cd $ANDROID_SDK_ROOT
-        mkdir -p tools
-        ln -sf ../cmdline-tools/latest/bin tools/bin 2>/dev/null || true
+        ln -sf cmdline-tools/latest tools 2>/dev/null || true
         
         echo "SDK setup complete"
         echo "SDK structure:"
