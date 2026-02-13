@@ -79,13 +79,19 @@ jobs:
     - name: List files
       run: ls -la
     
-    - name: Build APK with verbose output
+    - name: Build APK with retry
       run: |
         pip3 install buildozer cython
         export CCACHE_COMPRESS=1
         export CCACHE_MAXSIZE=5G
-        buildozer android debug -v 2>&1 | tee build.log
-      timeout-minutes: 120
+        # 添加重试机制
+        for i in 1 2 3; do
+          echo "Attempt $i..."
+          buildozer android debug -v 2>&1 | tee build.log && break
+          echo "Build failed, waiting 30 seconds before retry..."
+          sleep 30
+        done
+      timeout-minutes: 180
       continue-on-error: true
     
     - name: Check for APK
