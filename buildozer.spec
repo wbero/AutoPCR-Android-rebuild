@@ -32,7 +32,7 @@ python.patch = 13
 
 # Android SDK配置
 android.sdk_path = ~/.buildozer/android/platform/android-sdk
-android.ndk_path = ~/.buildozer/android/platform/android-ndk-r25b
+android.ndk_path = ~/.buildozer/android/platform/android-ndk-r23b
 android.ant_path = ~/.buildozer/android/platform/apache-ant-1.9.4
 
 # 指定sdkmanager路径（新版本的cmdline-tools）
@@ -44,8 +44,8 @@ android.api = 33
 # 最低API版本
 android.minapi = 21
 
-# NDK版本
-android.ndk = 25b
+# NDK版本 - 降级到23b以解决兼容性问题
+android.ndk = 23b
 
 # 支持的架构
 android.archs = arm64-v8a
