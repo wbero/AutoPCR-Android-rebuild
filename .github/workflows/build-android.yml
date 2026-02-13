@@ -73,7 +73,7 @@ jobs:
     
     - name: Clean and setup Android SDK
       run: |
-        # 清理旧的SDK
+        # 彻底清理旧的SDK（关键！）
         rm -rf ~/.buildozer/android/platform/android-sdk
         
         # 创建目录结构
@@ -96,11 +96,16 @@ jobs:
         sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0" || true
         
         # 创建符号链接兼容旧版结构（让buildozer能找到）
+        # buildozer查找的是 tools/bin/sdkmanager
         cd $ANDROID_SDK_ROOT
-        ln -sf cmdline-tools/latest/bin bin 2>/dev/null || true
+        mkdir -p tools
+        ln -sf ../cmdline-tools/latest/bin tools/bin 2>/dev/null || true
         
         echo "SDK setup complete"
-        ls -la cmdline-tools/latest/bin/
+        echo "SDK structure:"
+        ls -la
+        echo "Tools bin:"
+        ls -la tools/bin/ 2>/dev/null || echo "No tools/bin"
     
     - name: Build APK
       run: |
