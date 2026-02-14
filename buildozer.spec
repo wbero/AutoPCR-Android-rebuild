@@ -18,11 +18,11 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,json,html,js,css,svg,txt,db
 # 版本号
 version = 1.0.0
 
-# 依赖项 - 使用python3并指定版本3.10，pyjnius使用最新master分支
-requirements = python3==3.10.13,kivy,https://github.com/kivy/pyjnius/archive/refs/heads/master.zip,aiohttp,quart,sqlalchemy,pillow,pycryptodome,requests,msgpack,werkzeug,jinja2,click,itsdangerous,markupsafe,async_timeout,attrs,frozenlist,multidict,yarl,charset_normalizer,idna,urllib3,certifi,typing_extensions,greenlet==2.0.2
+# 依赖项 - 简化依赖，避免复杂包
+requirements = python3==3.10.13,kivy,pyjnius
 
-# p4a配置 - 使用稳定版本
-p4a.branch = master
+# p4a配置 - 使用develop分支获取最新修复
+p4a.branch = develop
 
 # 指定Python版本 - 关键配置
 python.version = 3.10
@@ -35,7 +35,7 @@ android.sdk_path = ~/.buildozer/android/platform/android-sdk
 android.ndk_path = ~/.buildozer/android/platform/android-ndk-r25b
 android.ant_path = ~/.buildozer/android/platform/apache-ant-1.9.4
 
-# 指定sdkmanager路径（新版本的cmdline-tools）
+# 指定sdkmanager路径
 android.sdkmanager_path = ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager
 
 # Android API版本
@@ -44,7 +44,7 @@ android.api = 33
 # 最低API版本
 android.minapi = 21
 
-# NDK版本 - p4a要求最低25
+# NDK版本
 android.ndk = 25b
 
 # 支持的架构
