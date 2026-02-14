@@ -18,17 +18,17 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,json,html,js,css,svg,txt,db
 # 版本号
 version = 1.0.0
 
-# 依赖项 - 使用python3并指定版本3.10，pyjnius使用pypi版本
-requirements = python3==3.10.13,kivy,pyjnius
+# 依赖项 - 使用python3并指定版本3.11，pyjnius使用1.6.1，kivy>=2.2.0
+requirements = python3==3.11.6,kivy>=2.2.0,pyjnius==1.6.1
 
 # p4a配置 - 使用master分支
 p4a.branch = master
 
 # 指定Python版本
-python.version = 3.10
+python.version = 3.11
 python.major = 3
-python.minor = 10
-python.patch = 13
+python.minor = 11
+python.patch = 6
 
 # Android SDK配置
 android.sdk_path = ~/.buildozer/android/platform/android-sdk
