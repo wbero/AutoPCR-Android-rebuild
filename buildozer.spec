@@ -18,13 +18,13 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,json,html,js,css,svg,txt,db
 # 版本号
 version = 1.0.0
 
-# 依赖项 - 简化依赖，避免复杂包
+# 依赖项 - 使用python3并指定版本3.10，pyjnius使用pypi版本
 requirements = python3==3.10.13,kivy,pyjnius
 
-# p4a配置 - 使用develop分支获取最新修复
-p4a.branch = develop
+# p4a配置 - 使用master分支
+p4a.branch = master
 
-# 指定Python版本 - 关键配置
+# 指定Python版本
 python.version = 3.10
 python.major = 3
 python.minor = 10
